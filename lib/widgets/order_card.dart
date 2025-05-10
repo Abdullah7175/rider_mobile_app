@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/order_model.dart';
 import '../providers/orders_provider.dart';
 import 'custom_button.dart';
@@ -170,8 +171,9 @@ class OrderCard extends ConsumerWidget {
                 CustomButton(
                   text: 'Start Delivery',
                   onPressed: () async {
-                    ordersNotifier.startDelivery(order.id);
-                    Fluttertoast.showToast(msg: 'Started delivery of order ${order.orderNumber}');
+                    // ordersNotifier.startDelivery(order.id);
+                    // Fluttertoast.showToast(msg: 'Started delivery of order ${order.orderNumber}');
+                    openInGoogleMaps;
                   },
                 ),
               if (order.status == 'in_progress')
@@ -196,5 +198,16 @@ class OrderCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+  Future<void> openInGoogleMaps() async {
+    final String googleMapsUrl =
+        'https://www.google.com/maps/search/?api=1&query=${24.904277},${67.113809}';
+    final Uri uri = Uri.parse(googleMapsUrl);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint('Could not launch Google Maps at $uri');
+    }
   }
 }
