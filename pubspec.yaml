@@ -46,6 +46,7 @@ dependencies:
   flutter_svg: ^1.1.6
   positioned_tap_detector_2: ^1.0.4
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,6 +63,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+
+  assets:
+    - lib/assets/logo.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

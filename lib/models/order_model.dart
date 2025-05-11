@@ -4,6 +4,8 @@ class Order {
   final String status;
   final String customerName;
   final String customerAddress;
+  final double latitude;  // Add this
+  final double longitude; // Add this
   final String customerPhone;
   final double totalAmount;
   final int itemCount;
@@ -21,6 +23,8 @@ class Order {
     required this.status,
     required this.customerName,
     required this.customerAddress,
+    required this.latitude,
+    required this.longitude,
     required this.customerPhone,
     required this.totalAmount,
     required this.itemCount,
@@ -39,6 +43,8 @@ class Order {
     String? status,
     String? customerName,
     String? customerAddress,
+    double? latitude,
+    double? longitude,
     String? customerPhone,
     double? totalAmount,
     int? itemCount,
@@ -56,6 +62,8 @@ class Order {
       status: status ?? this.status,
       customerName: customerName ?? this.customerName,
       customerAddress: customerAddress ?? this.customerAddress,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       customerPhone: customerPhone ?? this.customerPhone,
       totalAmount: totalAmount ?? this.totalAmount,
       itemCount: itemCount ?? this.itemCount,

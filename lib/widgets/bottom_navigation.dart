@@ -27,9 +27,12 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
         setState(() => _currentIndex = index);
         switch (index) {
           case 0:
-            context.go('/orders');
+            context.go('/home');
             break;
           case 1:
+            context.go('/orders');
+            break;
+          case 2:
             context.go('/profile');
             break;
         }
@@ -43,6 +46,11 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
         BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined),
           activeIcon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.delivery_dining),
+          activeIcon: Icon(Icons.delivery_dining),
           label: 'Orders',
         ),
         BottomNavigationBarItem(
@@ -50,26 +58,21 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
           activeIcon: Icon(Icons.person),
           label: 'Profile',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.delivery_dining_outlined),
-          activeIcon: Icon(Icons.delivery_dining),
-          label: 'Deliveries',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.history_outlined),
-          activeIcon: Icon(Icons.history),
-          label: 'History',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.analytics_outlined),
-          activeIcon: Icon(Icons.analytics),
-          label: 'Stats',
-        ),
+        // BottomNavigationBarItem(
+        //   icon: Icon(Icons.delivery_dining_outlined),
+        //   activeIcon: Icon(Icons.delivery_dining),
+        //   label: 'Deliveries',
+        // ),
+        // BottomNavigationBarItem(
+        //   icon: Icon(Icons.history_outlined),
+        //   activeIcon: Icon(Icons.history),
+        //   label: 'History',
+        // ),
+        // BottomNavigationBarItem(
+        //   icon: Icon(Icons.analytics_outlined),
+        //   activeIcon: Icon(Icons.analytics),
+        //   label: 'Stats',
+        // ),
       ],
     );
   }

@@ -60,98 +60,76 @@ class OrderCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ordersNotifier = ref.read(ordersProvider.notifier);
 
-    if (isUpcoming) {
-      return Card(
-        margin: const EdgeInsets.only(bottom: 12),
-        elevation: 2,
-        color: Colors.grey.shade50,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Order #${order.orderNumber}',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      Text('${order.itemCount} items • ${order.orderType}',
-                          style: TextStyle(color: getOrderTypeColor(order.orderType)))
-                    ],
-                  ),
-                  const Chip(label: Text('Scheduled')),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  const Icon(Icons.access_time, size: 20, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(DateFormat('EEEE, h:mm a').format(order.scheduledDate ?? DateTime.now())),
-                      Text(order.customerAddress, style: const TextStyle(fontSize: 12)),
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      );
-    }
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 2,
+      color: isUpcoming ? Colors.grey.shade50 : Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Order #${order.orderNumber}',
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text('${order.itemCount} items • ${order.orderType}',
+                        style: TextStyle(color: getOrderTypeColor(order.orderType))),
+                  ],
+                ),
+                Chip(
+                  label: Text(isUpcoming ? 'Scheduled' : getStatusText(order.status)),
+                  backgroundColor: isUpcoming ? Colors.grey.shade300 : getStatusColor(order.status),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
 
-    return InkWell(
-      onTap: onTap,
-      child: Card(
-        margin: const EdgeInsets.only(bottom: 12),
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
+            // Date & Address
+            Row(
+              children: [
+                Icon(
+                  isUpcoming ? Icons.access_time : Icons.location_pin,
+                  color: Colors.grey,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Order #${order.orderNumber}',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      Text('${order.itemCount} items • ${order.orderType}',
-                          style: TextStyle(color: getOrderTypeColor(order.orderType)))
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: getStatusColor(order.status),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(getStatusText(order.status), style: const TextStyle(fontSize: 12)),
-                  )
-                ],
-              ),
-              const Divider(height: 24),
-              Row(
-                children: [
-                  const Icon(Icons.location_pin, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(order.customerName, style: const TextStyle(fontWeight: FontWeight.w500)),
+                      if (isUpcoming)
+                        Text(DateFormat('EEEE, h:mm a')
+                            .format(order.scheduledDate ?? DateTime.now())),
                       Text(order.customerAddress, style: const TextStyle(fontSize: 12)),
                     ],
-                  )
+                  ),
+                ),
+              ],
+            ),
+
+            if (!isUpcoming) ...[
+              const Divider(height: 24),
+
+              // Customer Info
+              Row(
+                children: [
+                  const Icon(Icons.person, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(order.customerName,
+                        style: const TextStyle(fontWeight: FontWeight.w500)),
+                  ),
                 ],
               ),
+
               const Divider(height: 24),
+
+              // Payment Info
               Row(
                 children: [
                   const Icon(Icons.payment, color: Colors.grey),
@@ -163,17 +141,23 @@ class OrderCard extends ConsumerWidget {
                       Text('Amount: ${(order.totalAmount / 100).toStringAsFixed(2)} SAR',
                           style: const TextStyle(fontSize: 12)),
                     ],
-                  )
+                  ),
                 ],
               ),
+
               const SizedBox(height: 12),
+
+              // Action Buttons
               if (order.status == 'assigned')
                 CustomButton(
                   text: 'Start Delivery',
-                  onPressed: () async {
-                    // ordersNotifier.startDelivery(order.id);
-                    // Fluttertoast.showToast(msg: 'Started delivery of order ${order.orderNumber}');
-                    openInGoogleMaps;
+                  // onPressed: () async {
+                  //   ordersNotifier.startDelivery(order.id);
+                  //   Fluttertoast.showToast(msg: 'Started delivery of order ${order.orderNumber}');
+                  //   await openInGoogleMaps();
+                  // },
+                  onPressed: () {
+                    openInGoogleMaps();
                   },
                 ),
               if (order.status == 'in_progress')
@@ -181,7 +165,7 @@ class OrderCard extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     OutlinedButton(
-                      onPressed: () => onTap(),
+                      onPressed: onTap,
                       child: const Text('View Route'),
                     ),
                     const SizedBox(width: 8),
@@ -190,24 +174,34 @@ class OrderCard extends ConsumerWidget {
                       onPressed: () {
                         Navigator.pushNamed(context, '/payment/${order.id}');
                       },
-                    )
+                    ),
                   ],
-                )
+                ),
             ],
-          ),
+          ],
         ),
       ),
     );
   }
-  Future<void> openInGoogleMaps() async {
-    final String googleMapsUrl =
-        'https://www.google.com/maps/search/?api=1&query=${24.904277},${67.113809}';
-    final Uri uri = Uri.parse(googleMapsUrl);
 
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+  Future<void> openInGoogleMaps() async {
+    final Uri geoUri = Uri.parse('geo:24.904277,67.113809?q=24.904277,67.113809(Label)');
+    final Uri webUri = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=24.904277,67.113809',
+    );
+
+    debugPrint('Trying geo URI...');
+    if (await canLaunchUrl(geoUri)) {
+      debugPrint('Launching geo URI...');
+      final success = await launchUrl(geoUri, mode: LaunchMode.externalApplication);
+      if (!success) debugPrint('launchUrl() failed for geo URI');
     } else {
-      debugPrint('Could not launch Google Maps at $uri');
+      debugPrint('Geo URI failed, trying web URL...');
+      if (await canLaunchUrl(webUri)) {
+        await launchUrl(webUri, mode: LaunchMode.externalApplication);
+      } else {
+        debugPrint('Could not launch Google Maps in any mode.');
+      }
     }
   }
 }

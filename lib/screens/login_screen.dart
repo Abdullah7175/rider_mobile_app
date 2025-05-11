@@ -4,8 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/auth_provider.dart';
-import '../widgets/custom_input.dart';
-import '../widgets/custom_button.dart';
 
 class LoginPage extends HookConsumerWidget {
   const LoginPage({super.key});
@@ -19,74 +17,138 @@ class LoginPage extends HookConsumerWidget {
     final authNotifier = ref.read(authProvider.notifier);
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Card(
-            elevation: 6,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                      ),
-                      child: const Icon(Icons.house_rounded, size: 48, color: Colors.green),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text('Nasi Cleaning', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                    const Text('Delivery Rider Portal', style: TextStyle(color: Colors.grey)),
-                    const SizedBox(height: 24),
-
-                    // Rider ID
-                    CustomInput(
-                      label: 'Rider ID',
-                      controller: usernameController,
-                      validator: (value) => value == null || value.isEmpty ? 'Rider ID is required' : null,
-                      placeholder: 'Enter your Rider ID',
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Password
-                    CustomInput(
-                      label: 'Password',
-                      controller: passwordController,
-                      validator: (value) => value == null || value.isEmpty ? 'Password is required' : null,
-                      placeholder: 'Enter your password',
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 24),
-
-                    CustomButton(
-                      text: 'Sign In',
-                      isLoading: isLoading,
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          await authNotifier.login(
-                            usernameController.text.trim(),
-                            passwordController.text.trim(),
-                            onSuccess: () => context.go('/orders'),
-                          );
-                        }
-                      },
-                    ),
-
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Forgot password? Contact your vendor admin.',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Logo placeholder - replace with your actual logo
+                // Container(
+                //   padding: const EdgeInsets.all(16),
+                //   decoration: BoxDecoration(
+                //     shape: BoxShape.circle,
+                //     color: Colors.green[50],
+                //   ),
+                //   child: const Icon(
+                //     Icons.cleaning_services,
+                //     size: 48,
+                //     color: Colors.green,
+                //   ),
+                // ),
+                Image.asset(
+                  'lib/assets/logo.png',
+                  height: 120,  // Adjust height as needed
+                  fit: BoxFit.contain,
                 ),
-              ),
+
+                // const SizedBox(height: 16),
+                // Text(
+                //   'Nasi Cleaning',
+                //   style: TextStyle(
+                //     fontSize: 24,
+                //     fontWeight: FontWeight.bold,
+                //     color: Colors.grey[800],
+                //   ),
+                // ),
+                const SizedBox(height: 4),
+                Text(
+                  'Rider Portal',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 32),
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: usernameController,
+                            decoration: InputDecoration(
+                              labelText: 'Rider ID',
+                              prefixIcon: Icon(Icons.person_outline, color: Colors.grey[600]),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            validator: (value) => value == null || value.isEmpty
+                                ? 'Please enter your Rider ID'
+                                : null,
+                          ),
+                          const SizedBox(height: 16),
+                          TextFormField(
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: Icon(Icons.lock_outline, color: Colors.grey[600]),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            validator: (value) => value == null || value.isEmpty
+                                ? 'Please enter your password'
+                                : null,
+                          ),
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.teal[300],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: isLoading ? null : () async {
+                                if (formKey.currentState!.validate()) {
+                                  await authNotifier.login(
+                                    usernameController.text.trim(),
+                                    passwordController.text.trim(),
+                                    onSuccess: () => context.go('/home'),
+                                  );
+                                }
+                              },
+                              child: isLoading
+                                  ? const CircularProgressIndicator(color: Colors.white)
+                                  : const Text(
+                                'SIGN IN',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () {
+                    // Handle forgot password
+                  },
+                  child: Text(
+                    'Forgot password? Contact admin',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

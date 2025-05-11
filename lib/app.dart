@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rider_app/screens/home_screen.dart';
 
 import 'screens/login_screen.dart';
 import 'screens/orders_screen.dart';
@@ -43,7 +44,7 @@ final _router = GoRouter(
     }
 
     if (isLoggedIn && isLoginRoute) {
-      return '/orders';
+      return '/home';
     }
 
     return null;
@@ -69,6 +70,15 @@ final _router = GoRouter(
         );
       },
       routes: <RouteBase>[
+        GoRoute(
+          path: '/home',
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return MaterialPage<void>(
+              key: state.pageKey,
+              child: const HomeScreen(),
+            );
+          },
+        ),
         GoRoute(
           path: '/orders',
           pageBuilder: (BuildContext context, GoRouterState state) {
