@@ -1,9 +1,23 @@
-// Flutter conversion of not-found.tsx
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
-class NotFoundPage extends StatelessWidget {
+class NotFoundPage extends StatefulWidget {
   const NotFoundPage({super.key});
+
+  @override
+  State<NotFoundPage> createState() => _NotFoundPageState();
+}
+
+class _NotFoundPageState extends State<NotFoundPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        context.go('/home'); // Redirect after 3 seconds
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +51,12 @@ class NotFoundPage extends StatelessWidget {
                 const Text(
                   'Did you forget to add the page to the router?',
                   style: TextStyle(fontSize: 14, color: Colors.grey),
-                )
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => context.go('/home'),
+                  child: const Text('Go to Home Now'),
+                ),
               ],
             ),
           ),

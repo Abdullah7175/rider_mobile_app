@@ -331,7 +331,7 @@ class HomeScreen extends ConsumerWidget {
                   context,
                   Icons.payment,
                   "Earnings",
-                      () {}, // Empty callback for now
+                      () => context.go('/home/earnings'),
                 ),
                 _buildActionButton(
                   context,

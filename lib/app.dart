@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rider_app/screens/earning_screen.dart';
 import 'package:rider_app/screens/home_screen.dart';
 
 import 'screens/login_screen.dart';
@@ -69,6 +70,16 @@ final _router = GoRouter(
           ),
         );
       },
+      // errorpageBuilder: (BuildContext context, GoRouterState state) {
+      //   return MaterialPage<void>(
+      //     key: state.pageKey,
+      //     child: Scaffold(
+      //       body: const NotFoundPage(),
+      //       bottomNavigationBar: const BottomNavigation(), // Show the nav bar
+      //     ),
+      //   );
+      // },
+
       routes: <RouteBase>[
         GoRoute(
           path: '/home',
@@ -78,6 +89,17 @@ final _router = GoRouter(
               child: const HomeScreen(),
             );
           },
+          routes: [
+            GoRoute(
+              path: 'earnings',
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                return MaterialPage<void>(
+                  key: state.pageKey,
+                  child: const EarningsScreen(),
+                );
+              },
+            ),
+          ],
         ),
         GoRoute(
           path: '/orders',
@@ -141,7 +163,10 @@ final _router = GoRouter(
   errorPageBuilder: (BuildContext context, GoRouterState state) {
     return MaterialPage<void>(
       key: state.pageKey,
-      child: const NotFoundPage(),
+      child: Scaffold(
+        body: const NotFoundPage(),
+        bottomNavigationBar: const BottomNavigation(), // Consistent layout
+      ),
     );
   },
 );
